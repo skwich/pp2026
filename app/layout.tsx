@@ -1,11 +1,4 @@
-// app/layout.tsx
-import type { Metadata } from "next"
 import "./globals.css"
-
-export const metadata: Metadata = {
-  title: "Регистрация",
-  description: "Современная форма регистрации",
-}
 
 export default function RootLayout({
   children,
@@ -14,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className="antialiased">
+      <body>
         {children}
       </body>
     </html>
