@@ -32,7 +32,9 @@ export default function LoginPage() {
           </div>
 
           <div className="relative">
-            <a href='#' className="text-sm text-gray-400 hover:text-[#ff5722] transition-colors font-sans pl-4">Забыли пароль?</a>
+            <a href='#' className="text-sm text-gray-400 hover:text-[#ff5722] transition-colors font-sans pl-4">
+                Забыли пароль?
+            </a>
           </div>
 
           <button
