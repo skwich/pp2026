@@ -1,15 +1,19 @@
+import { Inter } from 'next/font/google'
 import "./globals.css"
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-inter',
+});
+
+export default function RootLayout({ children }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
     <html lang="ru">
-      <body>
+      <body className={`${inter.variable} antialiased`}>
         {children}
       </body>
     </html>
-  )
+  );
 }
