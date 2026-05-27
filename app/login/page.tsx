@@ -2,44 +2,38 @@
 
 export default function LoginPage() {
     return (
-        <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col justify-center items-center p-6 font-sans">
+        <div className="min-h-screen bg-white text-black flex flex-col justify-center items-center p-6 font-sans">
 
-      <div className="w-full max-w-[420px] space-y-8">
+      <div className="w-full max-w-[430px]">
 
-        <div className="space-y-4">
-          <h1 className="text-5xl font-bold leading-[1.25]">Вход</h1>
-          <p className="text-gray-400 text-lg">
+        <div>
+          <h1 className="text-[32px] font-normal">ВХОД</h1>
+          <p className="text-[18px] font-light">
             Нет аккаунта?{' '}
-            <a href="/register" className="text-[#ff5722] font-bold hover:underline">Зарегистрироваться</a>
+            <a href="/register" className="hover:underline">Зарегистрироваться</a>
           </p>
         </div>
 
-        <form className="space-y-4 mt-8">
-          <div className="relative ">
+        <form className="mt-[17px] flex flex-col items-center w-full">
+          <div className="relative w-full">
               <input
                 type="text"
-                placeholder="Login"
-                className="w-full bg-[#262626] text-white placeholder-gray-500 rounded-full py-4 px-6 outline-none focus:ring-2 focus:ring-[#ff5722] transition-all"
+                placeholder="Логин"
+                className="w-full text-black font-inter placeholder-[#9F9F9F] placeholder:text-[18px] border-b-3 border-b-[#D0D0D0] py-4 outline-none"
               />
             </div>
 
-          <div className="relative">
+          <div className="relative w-full">
             <input
               type="password"
-              placeholder="Password"
-              className="w-full bg-[#262626] text-white placeholder-gray-500 rounded-full py-4 px-6 outline-none focus:ring-2 focus:ring-[#ff5722] transition-all"
+              placeholder="Пароль"
+              className="w-full text-black font-inter placeholder-[#9F9F9F] placeholder:text-[18px] border-b-3 border-b-[#D0D0D0] py-4 outline-none"
             />
-          </div>
-
-          <div className="relative">
-            <a href='#' className="text-sm text-gray-400 hover:text-[#ff5722] transition-colors font-sans pl-4">
-                Забыли пароль?
-            </a>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#ff5722] hover:bg-[#e64a19] text-white font-bold text-lg rounded-full py-4 mt-4 transition-colors shadow-lg shadow-orange-900/20"
+            className="flex items-center justify-center w-full max-w-[300px] h-full max-h-[50px] bg-[#252525] font-inter text-white text-[18px] font-normal rounded-[4px] py-[14px] mt-[50px]"
           >
             Войти
           </button>

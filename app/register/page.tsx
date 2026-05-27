@@ -14,7 +14,7 @@ export default function RegistrationPage() {
           </p>
         </div>
 
-        <form className="flex flex-col items-center w-full">
+        <form className="mt-[17px] flex flex-col items-center w-full">
           <div className="relative w-full">
               <input
                 type="text"
