@@ -15,10 +15,10 @@ interface Project {
 
 export default function MyProjectsPage() {
     const [projects, setProject] = useState<Project[]>([
-        {id: 1, title: "Проект", pdfName:"pdfnam", excelName:"excelnam", description:"desc"},
-        {id: 2, title: "Проект2", pdfName:"pdfnam", excelName:"excelnam", description:"desc"},
-        {id: 3, title: "Проект3", pdfName:"pdfnam", excelName:"excelnam", description:"desc"},
-        {id: 4, title: "Проект4", pdfName:"pdfnam", excelName:"excelnam", description:"desc"},
+        {id: 1, title: "Проект", pdfName:"не загружен", excelName:"не сформирован", description:"Черновик"},
+        {id: 2, title: "Проект2", pdfName:"не загружен", excelName:"не сформирован", description:"Черновик"},
+        {id: 3, title: "Проект3", pdfName:"не загружен", excelName:"не сформирован", description:"Черновик"},
+        {id: 4, title: "Проект4", pdfName:"не загружен", excelName:"не сформирован", description:"Черновик"},
     ]);
 
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -29,9 +29,9 @@ export default function MyProjectsPage() {
         const newProject: Project = {
             id: newId,
             title: `Проект${newId}`,
-            pdfName: "pdfnam",
-            excelName: "excelnam",
-            description: "desc",
+            pdfName: "не загружен",
+            excelName: "не сформирован",
+            description: "Черновик",
         };
 
         setProject([... projects, newProject]);
