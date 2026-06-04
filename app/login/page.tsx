@@ -2,7 +2,7 @@
 
 export default function LoginPage() {
     return (
-        <div className="min-h-screen bg-white text-black flex flex-col justify-center items-center p-6 font-sans">
+    <div className="min-h-screen bg-white text-black flex flex-col justify-center items-center p-6 font-sans">
 
       <div className="w-full max-w-[430px]">
 
