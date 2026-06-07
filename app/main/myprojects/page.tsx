@@ -65,7 +65,7 @@ export default function MyProjectsPage() {
                             Сортировать по:
                             {/* <img src="arrow_down.svg" width="10px" height="6px" className="ml-[4px] mr-[1px] pt-[5px]"/>
                             <select className="appearance-none outline-none"> */}
-                            <select className="appearance-none bg-[url(/arrow_down.svg)] bg-no-repeat bg-[25px] pl-4 bg-[length:10px_6px] bg-[position:4px_12px] outline-none">
+                            <select className="appearance-none bg-[url(/arrow_down.svg)] bg-no-repeat pl-4 bg-[length:10px_6px] bg-[position:4px_12px] outline-none">
                                 <option value="дате изменения">дате изменения</option>
                             </select>
                         </label>
