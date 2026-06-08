@@ -25,7 +25,7 @@ export default function LoginPage() {
         <h1 className="text-[32px] font-normal">ВХОД</h1>
         <p className="text-[18px] font-light">
           Нет аккаунта?{' '}
-          <a href="/auth/sign-up" className="hover:underline">Зарегистрироваться</a>
+          <a href="/sign-up" className="hover:underline">Зарегистрироваться</a>
         </p>
       </div>
 

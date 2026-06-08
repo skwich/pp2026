@@ -57,7 +57,7 @@ export default function RegistrationPage() {
           <h1 className="text-[32px] font-normal">СОЗДАТЬ АККАУНТ</h1>
           <p className="text-[18px] font-light">
             Уже есть аккаунт?{' '}
-            <a href="/auth/sign-in" className="hover:underline">Войти</a>
+            <a href="/sign-in" className="hover:underline">Войти</a>
           </p>
         </div>
 
