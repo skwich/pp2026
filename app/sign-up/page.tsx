@@ -2,28 +2,11 @@
 
 import { SyntheticEvent, useState } from "react";
 import { authClient } from "@/lib/auth-client";
-
-async function OnClickRegisterButton({email, password, username}: {email:string, password: string, username: string}) {
-  const { data, error } = await authClient.signUp.email({
-          email: email,
-          name: "user",
-          password: password,
-          username: username
-      }, {
-          onRequest: (ctx) => {
-              //show loading
-          },
-          onSuccess: (ctx) => {
-              //redirect to the dashboard or sign in page
-          },
-          onError: (ctx) => {
-              // display the error message
-              alert(ctx.error.message);
-          },
-  });
-}
+import { useRouter } from "next/navigation";
 
 export default function RegistrationPage() {
+  const router = useRouter();
+
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,13 +17,13 @@ export default function RegistrationPage() {
         email: email,
         name: "user",
         password: password,
-        username: login 
+        username: login,
     }, {
         onRequest: (ctx) => {
             // show loading
         },
         onSuccess: (ctx) => {
-            // redirect to the dashboard or sign in page
+          router.push("/my-projects");
         },
         onError: (ctx) => {
             alert(ctx.error.message);

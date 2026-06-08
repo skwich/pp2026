@@ -1,9 +1,11 @@
 'use client';
 
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
 
 export default function LoginPage() {
+  const router = useRouter();
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -13,6 +15,10 @@ export default function LoginPage() {
     const { data, error } = await authClient.signIn.username({
       username: login,
       password: password,
+    }, {
+      onSuccess(context) {
+        router.push("/my-projects");
+      },
     });
   }
 
