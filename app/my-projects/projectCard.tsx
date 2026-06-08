@@ -20,12 +20,12 @@ export default function ProjectCard({id, title, pdfName, excelName, description,
             <div className="flex justify-end space-x-[5px]">
                 <button
                     onClick={() => onOpenProject(id)}
-                    className="w-[100px] h-[25px] bg-[#151414] rounded-[3px] text-white text-[14px] font-bold px-[16px]">
+                    className="w-[100px] h-[25px] bg-[#151414] rounded-[3px] text-white text-[14px] font-bold px-[16px] hover:cursor-pointer">
                     ОТКРЫТЬ
                 </button>
                 <button 
                     onClick={() => onDeleteProject(id)}
-                    className="w-[25px] h-[25px]">
+                    className="w-[25px] h-[25px] hover:cursor-pointer">
                     <img src="trash.svg"/>
                 </button>
             </div>

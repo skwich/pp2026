@@ -11,8 +11,6 @@ interface Project {
     description: string
 }
 
-
-
 export default function MyProjectsPage() {
     const [projects, setProject] = useState<Project[]>([
         {id: 1, title: "Проект", pdfName:"не загружен", excelName:"не сформирован", description:"Черновик"},
@@ -50,7 +48,7 @@ export default function MyProjectsPage() {
     );
 
     return (
-        <div className="min-h-screen bg-white flex">
+        <div className="bg-white flex">
             <div className="px-[90px] py-[50px] w-full flex flex-col space-y-[44px]">
                 <div className="w-full max-w-[1100px] mx-auto">
                     <h1 className="text-[36px] font-bold uppercase">Мои проекты</h1>
