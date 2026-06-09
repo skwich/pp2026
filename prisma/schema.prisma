@@ -25,10 +25,11 @@ model User {
 
   username        String?
   displayUsername String?
+  projects        Project[]
 
   @@unique([email])
-  @@map("user")
   @@unique([username])
+  @@map("user")
 }
 
 model Session {
@@ -77,4 +78,19 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  pdfName     String
+  excelName   String
+  description String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@map("project")
 }
