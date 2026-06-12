@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import ProjectCard from "./projectCard";
 
 interface Project {
@@ -22,6 +23,7 @@ export default function MyProjectsPage() {
       .then((data) => setProject(data));
   }, []);
 
+  const router = useRouter();
   const [sortBy, setSortBy] = useState<"updatedAt" | "createdAt">("updatedAt");
 //   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -52,7 +54,7 @@ export default function MyProjectsPage() {
   }
 
   function handleOpenProject(id: number) {
-    alert(`open project with id: ${id}`);
+    router.push(`/my-projects/${id}`);
   }
 
   return (
