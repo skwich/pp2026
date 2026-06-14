@@ -15,6 +15,9 @@ export default function ProjectPage() {
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
+  const [scriptResult, setScriptResult] = useState<string | null>(null);
+  const [canParse, setParse] = useState(true);
+  const [canDownload, setDownload] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -47,8 +50,30 @@ export default function ProjectPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleParse = async () => {
+    setParse(false);
+    try {
+      const response = await fetch();
+    } catch (err) {
+      console.error(err);
+      setParse(true);
+    } finally {
+      setParse(false);
+      setDownload(true);
+    }
+  };
+
+  const handleDownload = async () => {
+    setDownload(false);
+    try {
+      const response = await fetch(`/api/projects/${id}/download`, { method: "POST" });
+      // todo download
+    } catch (err) {
+      console.error(err);
+      setDownload(true);
+    } finally {
+      setDownload(true);
+    }
   };
 
   return (
@@ -105,7 +130,7 @@ export default function ProjectPage() {
               </div>
 
               <div className="flex flex-col gap-y-[5px]">
-                <label className="text-[16px]">Введите количество этажей</label>
+                <label className="text-[16px]">Заголовки по которым определяется таблица</label>
                 <div className="flex gap-x-[10px]">
                   <textarea
                     readOnly
@@ -204,8 +229,12 @@ export default function ProjectPage() {
                 />
               </div>
             </div>
-            <button className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer">
-              Скачать результат
+            <button
+              disabled={!(canParse || canDownload)}
+              onClick={canDownload ? handleDownload : handleParse}
+              className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer"
+            >
+              {canParse ? 'Выполняется...' : canDownload ? 'Скачать результат' : 'Запустить обработку'}
             </button>
           </div>
         </div>
