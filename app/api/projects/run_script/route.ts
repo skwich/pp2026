@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   if (project.minFont) args.push("--min-font", project.minFont);
   if (project.shouldWarn) args.push("--should-warn", project.shouldWarn);
 
-  const proc = spawn(".venv/bin/python", args, { cwd: process.cwd() });
+  const proc = spawn("script/.venv/bin/python", args, { cwd: process.cwd() });
 
   let stdout = "";
   let stderr = "";
