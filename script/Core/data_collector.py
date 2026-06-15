@@ -17,9 +17,9 @@ def collect_data_from_pdf(pdf_path, chosen_floors):
 
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
-            print(f"\nСтраница {page.page_number}:")
+            print(f"\nСтраница {page.page_number}:", flush=True)
 
-            row_found_explications = page.search("Э?ксп?ликация", regex=True)
+            row_found_explications = page.search("Э?ксп?ликация", regex=True, flush=True)
 
             filtered_found_explications = []
             for expl in row_found_explications:
@@ -27,7 +27,7 @@ def collect_data_from_pdf(pdf_path, chosen_floors):
                     filtered_found_explications.append(expl)
 
             if not filtered_found_explications:
-                print(f"Не нашёл экспликаций на странице {page.page_number}")
+                print(f"Не нашёл экспликаций на странице {page.page_number}", flush=True)
                 continue
 
             all_found_tables_bboxes = set()
@@ -51,7 +51,7 @@ def collect_data_from_pdf(pdf_path, chosen_floors):
 
             if consts.should_warn:
                 if len(correct_tables) < len(filtered_found_explications):
-                    print("Внимание! Количество найденных таблиц меньше количества экспликаций")
+                    print("Внимание! Количество найденных таблиц меньше количества экспликаций", flush=True)
 
             for correct_table in correct_tables:
                 floor = correct_table.floor
@@ -59,7 +59,7 @@ def collect_data_from_pdf(pdf_path, chosen_floors):
                 print(
                     f"\n---------- НОВАЯ ТАБЛИЦА на странице: {page.page_number} -----------\n"
                     f"Название: {correct_table.name}"
-                )
+                , flush=True)
 
                 for row in correct_table.rows[1:]:
                     parsed = parse_table_row(row)

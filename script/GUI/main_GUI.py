@@ -1,4 +1,3 @@
-import threading
 import traceback
 from Core.data_collector import collect_data_from_pdf
 from Core.excel_writer import create_excel
@@ -14,7 +13,7 @@ class App:
 
 
     def run(self):
-        print("Запуск обработки...")
+        print("Запуск обработки...", flush=True)
         self.process()
 
 
@@ -23,27 +22,27 @@ class App:
             pdf_path = self.pdf_path.strip()
 
             if not pdf_path:
-                print("Ошибка: PDF не выбран")
+                print("Ошибка: PDF не выбран", flush=True)
                 return
 
-            print("Старт обработки PDF...")
+            print("Старт обработки PDF...", flush=True)
 
             data = collect_data_from_pdf(pdf_path, self.floors)
 
             if not data:
-                print("Результат: данных нет")
-                print("Результат: Ничего не найдено в PDF")
+                print("Результат: данных нет", flush=True)
+                print("Результат: Ничего не найдено в PDF", flush=True)
                 return
 
             output_path = self.output_path.strip()
             if not output_path:
-                print("Нет пути для выходных данных")
+                print("Нет пути для выходных данных", flush=True)
                 return
 
-            print("Создание Excel...")
+            print("Создание Excel...", flush=True)
             create_excel(data, output_path=output_path)
-            print("Готово")
-            print(f"Готово: Excel файл создан по адресу: {self.output_path}")
+            print("Готово", flush=True)
+            print(f"Готово: Excel файл создан по адресу: {self.output_path}", flush=True)
 
 
         except Exception as e:
