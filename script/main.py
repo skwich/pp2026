@@ -2,8 +2,7 @@ from GUI.main_GUI import App
 
 import Core.consts as consts
 import argparse
-
-import argparse
+from pathlib import Path
 
 
 def apply_args():
@@ -75,7 +74,11 @@ def apply_args():
 
 
 if __name__ == "__main__":
+
     floors, username, project_id, pdf_name = apply_args()
-    pdf_path = f"../userdata/{username}/{project_id}/{pdf_name}.pdf"
-    output_path = f"../userdata/{username}/{project_id}/Результат.xlsx"
-    app = App(floors, pdf_path, output_path)
+
+    ROOT_DIR = Path(__file__).resolve().parent.parent
+    pdf_path = ROOT_DIR / "userdata" / username / project_id / pdf_name
+    output_path = ROOT_DIR / "userdata" / username / project_id / "Результат.xlsx"
+
+    app = App(floors, str(pdf_path), str(output_path))

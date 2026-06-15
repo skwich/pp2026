@@ -10,12 +10,12 @@ class App:
         self.floors = floors
         self.output_path = output_path
 
-        self.run(self)
+        self.run()
 
 
     def run(self):
         print("Запуск обработки...")
-        threading.Thread(target=self.process, daemon=True).start()
+        self.process()
 
 
     def process(self):
