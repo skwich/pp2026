@@ -90,6 +90,14 @@ model Project {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  floors        String?
+  rawHeaders    String?
+  breakWords    String?
+  maxIndex      String?
+  maxDistSnap   String?
+  maxDistStop   String?
+  minFont       String?
+  shouldWarn    String?
 
   @@index([userId])
   @@map("project")
