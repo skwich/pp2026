@@ -2,7 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import { redirect, useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Project {
   id: number;
@@ -22,8 +22,16 @@ export default function ProjectPage() {
   const [isChecked, setIsChecked] = useState(false);
 
   const [floors, setFloors] = useState("");
+  const [logs, setLogs] = useState<string[]>([]);
+  const logRef = useRef<HTMLDivElement>(null);
 
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+
+  useEffect(() => {
+    if (logRef.current) {
+      logRef.current.scrollTop = logRef.current.scrollHeight;
+    }
+  }, [logs]);
 
   useEffect(() => {
     fetch(`/api/projects/${id}`)
@@ -60,20 +68,46 @@ export default function ProjectPage() {
 
   const handleParse = async () => {
     setButtonDisabled(true);
+    setLogs([]);
     try {
-      await fetch("/api/projects/run_script", {
+      const res = await fetch("/api/projects/run_script", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          project_id: id
-        }),
+        body: JSON.stringify({ project_id: id }),
       });
+
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          try {
+            const event = JSON.parse(line.slice(6));
+            if (event.type === "stdout" || event.type === "stderr") {
+              setLogs((prev) => [...prev, event.text.trim()]);
+            }
+          } catch {
+            // skip malformed events
+          }
+        }
+      }
     } catch (err) {
-      console.error(err);
+      setLogs((prev) => [...prev, `[ERROR] ${err}`]);
     } finally {
       setButtonDisabled(false);
     }
   };
+
+  
 
   const handleDownload = async () => {
     setButtonDisabled(true);
@@ -253,12 +287,22 @@ export default function ProjectPage() {
             </button>
           </div>
         </div>
-        <div className="w-full h-full max-w-[330px] max-h-[330px] border-2 rounded-[5px] px-[24px]">
+        <div className="w-full max-w-[330px] h-[330px] border-2 rounded-[5px] px-[24px] flex flex-col">
           <h1 className="mt-[15px] text-[24px] font-bold uppercase">
             Лог обработки
           </h1>
-          {}
-          <button className="w-[150px] h-[50px] mb-[44px] flex mx-auto justify-center items-center bg-black rounded-[3px] text-white text-[14px] font-bold uppercase break-words">
+          <div
+            ref={logRef}
+            className="flex-1 overflow-y-auto text-[12px] font-mono whitespace-pre-wrap mt-[10px]"
+          >
+            {logs.map((line, i) => (
+              <div key={i}>{line}</div>
+            ))}
+          </div>
+          <button
+            onClick={() => setLogs([])}
+            className="w-[150px] h-[50px] mb-[44px] flex mx-auto justify-center items-center bg-black rounded-[3px] text-white text-[14px] font-bold uppercase break-words"
+          >
             Очистить лог
           </button>
         </div>
