@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { redirect, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -12,15 +13,17 @@ interface Project {
 }
 
 export default function ProjectPage() {
+  const { data: session } = authClient.useSession();
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
-  const [scriptResult, setScriptResult] = useState<string | null>(null);
-  const [canParse, setParse] = useState(true);
-  const [canDownload, setDownload] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  const [floors, setFloors] = useState("");
+
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
 
   useEffect(() => {
     fetch(`/api/projects/${id}`)
@@ -43,36 +46,46 @@ export default function ProjectPage() {
     redirect("/my-projects");
   }
 
-  const handleChangeInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
+  const handleChangeInputText = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    setFile(file);
+    setButtonDisabled(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    await fetch(`/api/projects/${id}/upload`, { method: "POST", body: formData });
+    setButtonDisabled(false);
+  }
+};
 
   const handleParse = async () => {
-    setParse(false);
+    setButtonDisabled(true);
     try {
-      const response = await fetch();
+      await fetch("/api/projects/run_script", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project_id: id
+        }),
+      });
     } catch (err) {
       console.error(err);
-      setParse(true);
     } finally {
-      setParse(false);
-      setDownload(true);
+      setButtonDisabled(false);
     }
   };
 
   const handleDownload = async () => {
-    setDownload(false);
+    setButtonDisabled(true);
     try {
-      const response = await fetch(`/api/projects/${id}/download`, { method: "POST" });
+      const response = await fetch(`/api/projects/${id}/download`, {
+        method: "POST",
+      });
       // todo download
     } catch (err) {
       console.error(err);
-      setDownload(true);
     } finally {
-      setDownload(true);
+      setButtonDisabled(false);
     }
   };
 
@@ -130,7 +143,9 @@ export default function ProjectPage() {
               </div>
 
               <div className="flex flex-col gap-y-[5px]">
-                <label className="text-[16px]">Заголовки по которым определяется таблица</label>
+                <label className="text-[16px]">
+                  Заголовки по которым определяется таблица
+                </label>
                 <div className="flex gap-x-[10px]">
                   <textarea
                     readOnly
@@ -230,11 +245,11 @@ export default function ProjectPage() {
               </div>
             </div>
             <button
-              disabled={!(canParse || canDownload)}
-              onClick={canDownload ? handleDownload : handleParse}
+              disabled={isButtonDisabled}
+              onClick={handleParse}
               className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer"
             >
-              {canParse ? 'Выполняется...' : canDownload ? 'Скачать результат' : 'Запустить обработку'}
+              {"Запустить обработку"}
             </button>
           </div>
         </div>

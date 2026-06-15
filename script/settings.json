@@ -1,0 +1,32 @@
+{
+    "raw_headers": [
+        [
+            "Номер помещения",
+            "Наименование",
+            "Площадь, м2",
+            "Кат. Пом."
+        ],
+        [
+            "Номер",
+            "Число",
+            "Площадь, м2"
+        ],
+        [
+            "№пом",
+            "Наименование",
+            "Площадь м2",
+            "Кат. Пом."
+        ]
+    ],
+    "break_words": [
+        "экспликация",
+        "условные",
+        "схема"
+    ],
+    "forbidden_chars": ".,:;\\|/[]?!'*%#-",
+    "max_index_to_search_header_words_by": 30,
+    "max_distance_to_snap_words_together": 3,
+    "max_distance_to_stop_forming_table": 45,
+    "min_explication_font_size": 10,
+    "should_warn": false
+}
