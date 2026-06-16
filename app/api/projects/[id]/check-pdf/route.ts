@@ -22,18 +22,23 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
+  const { searchParams } = new URL(req.url);
+  const type = searchParams.get("type");
+
+  const filename = type === "excel" ? "Результат.xlsx" : project.pdfName;
+
   const filepath = path.join(
     process.cwd(),
     "userdata",
     session.user.username!,
     id,
-    project.pdfName,
+    filename,
   );
 
   try {
     await access(filepath);
-    return NextResponse.json({ exists: true, pdfName: project.pdfName });
+    return NextResponse.json({ exists: true, filename });
   } catch {
-    return NextResponse.json({ exists: false, pdfName: project.pdfName });
+    return NextResponse.json({ exists: false, filename });
   }
 }

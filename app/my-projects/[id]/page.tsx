@@ -64,6 +64,10 @@ export default function ProjectPage() {
         setMinFont(data.minFont ?? "");
         setShouldWarn(data.shouldWarn === "true");
         setLoading(false);
+
+        fetch(`/api/projects/${id}/check-pdf?type=excel`)
+          .then((r) => r.json())
+          .then(({ exists }) => setExcelFileExist(exists));
       })
       .catch(() => setLoading(false));
   }, [id]);
