@@ -97,7 +97,8 @@ model Project {
   maxDistSnap   String?
   maxDistStop   String?
   minFont       String?
-  shouldWarn    String?
+  shouldWarn        String?
+  excelGeneratedAt  DateTime?
 
   @@index([userId])
   @@map("project")

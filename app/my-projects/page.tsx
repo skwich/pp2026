@@ -12,6 +12,8 @@ interface Project {
   description: string;
   createdAt: string;
   updatedAt: string;
+  excelExists: boolean;
+  excelGeneratedAt: string | null;
 }
 
 export default function MyProjectsPage() {
@@ -91,6 +93,8 @@ export default function MyProjectsPage() {
               title={project.title}
               pdfName={project.pdfName}
               excelName={project.excelName}
+              excelExists={project.excelExists}
+              excelGeneratedAt={project.excelGeneratedAt}
               description={project.description}
               onOpenProject={handleOpenProject}
               onDeleteProject={handleDeleteProject}

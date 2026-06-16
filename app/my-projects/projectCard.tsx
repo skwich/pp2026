@@ -3,19 +3,23 @@ interface ProjectCardProps {
     title: string,
     pdfName: string,
     excelName: string,
+    excelExists: boolean,
+    excelGeneratedAt: string | null,
     description: string,
     onOpenProject: (id: number) => void,
     onDeleteProject: (id: number) => void
 }
 
-export default function ProjectCard({id, title, pdfName, excelName, description, onOpenProject, onDeleteProject}: ProjectCardProps) {
+export default function ProjectCard({id, title, pdfName, excelName, excelExists, excelGeneratedAt, description, onOpenProject, onDeleteProject}: ProjectCardProps) {
     return (
         <div className="w-[330px] h-[163px] border-[2px] rounded-[5px] flex flex-col justify-between px-[24px] py-[13px]">
             <div>
                 <h1 className="text-[24px] font-bold uppercase">{title}</h1>
                 <p>PDF: {pdfName}</p>
-                <p>Excel: {excelName}</p>
-                <p>{description}</p>
+                <p>Excel: {excelExists ? "Результат.xlsx" : excelName}</p>
+                {excelExists
+                    ? <p>Обновлено: {new Date(excelGeneratedAt!).toLocaleString("ru-RU")}</p>
+                    : <p>{description}</p>}
             </div>
             <div className="flex justify-end space-x-[5px]">
                 <button

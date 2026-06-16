@@ -42,18 +42,25 @@ export async function PATCH(
   }
 
   const body = await req.json();
+  const data: Record<string, unknown> = {};
+  if (body.floors !== undefined) data.floors = body.floors;
+  if (body.rawHeaders !== undefined) data.rawHeaders = body.rawHeaders;
+  if (body.breakWords !== undefined) data.breakWords = body.breakWords;
+  if (body.maxIndex !== undefined) data.maxIndex = body.maxIndex;
+  if (body.maxDistSnap !== undefined) data.maxDistSnap = body.maxDistSnap;
+  if (body.maxDistStop !== undefined) data.maxDistStop = body.maxDistStop;
+  if (body.minFont !== undefined) data.minFont = body.minFont;
+  if (body.shouldWarn !== undefined) data.shouldWarn = body.shouldWarn;
+  if (body.excelName !== undefined) {
+    data.excelName = body.excelName;
+    if (body.excelName === "Результат.xlsx") {
+      data.excelGeneratedAt = new Date();
+    }
+  }
+
   const updated = await prisma.project.update({
     where: { id: Number(id) },
-    data: {
-      ...(body.floors !== undefined && { floors: body.floors }),
-      ...(body.rawHeaders !== undefined && { rawHeaders: body.rawHeaders }),
-      ...(body.breakWords !== undefined && { breakWords: body.breakWords }),
-      ...(body.maxIndex !== undefined && { maxIndex: body.maxIndex }),
-      ...(body.maxDistSnap !== undefined && { maxDistSnap: body.maxDistSnap }),
-      ...(body.maxDistStop !== undefined && { maxDistStop: body.maxDistStop }),
-      ...(body.minFont !== undefined && { minFont: body.minFont }),
-      ...(body.shouldWarn !== undefined && { shouldWarn: body.shouldWarn }),
-    },
+    data,
   });
 
   return NextResponse.json(updated);
