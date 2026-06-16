@@ -61,8 +61,8 @@ def apply_args():
     args = parser.parse_args()
 
     # Присваиваем значения глобальным константам (заменяем дефисы на нижние подчеркивания)
-    consts.raw_headers = args.raw_headers
-    consts.break_words = args.break_words
+    consts.raw_headers = [line.split() for line in args.raw_headers.splitlines()]
+    consts.break_words = args.break_words.split()
     consts.max_index_to_search_header_words_by = args.max_index
     consts.max_distance_to_snap_words_together = args.max_dist_snap
     consts.max_distance_to_stop_forming_table = args.max_dist_stop

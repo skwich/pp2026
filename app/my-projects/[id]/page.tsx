@@ -348,14 +348,14 @@ export default function ProjectPage() {
                     placeholder="Например: Номер, число, площадь, м2"
                     className="w-full min-h-[90px] border-2 rounded-[3px] px-[8px] py-[5px]"
                   />
-                  <div className="flex flex-col gap-y-[20px] my-[2px]">
+                  {/* <div className="flex flex-col gap-y-[20px] my-[2px]">
                     <button className="w-[120px] h-[32px] bg-black rounded-[3px] text-white font-bold text-[14px] uppercase flex justify-center py-[5px] cursor-pointer">
                       Добавить
                     </button>
                     <button className="w-[120px] h-[32px] bg-black rounded-[3px] text-white font-bold text-[14px] uppercase flex justify-center py-[5px] cursor-pointer">
                       Удалить
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -371,14 +371,14 @@ export default function ProjectPage() {
                     placeholder={"Например:\nэкспликация\nусловные\nсхема"}
                     className="w-full min-h-[110px] border-2 rounded-[3px] px-[8px] py-[5px]"
                   />
-                  <div className="flex flex-col gap-y-[20px] my-[2px]">
+                  {/* <div className="flex flex-col gap-y-[20px] my-[2px]">
                     <button className="w-[120px] h-[32px] bg-black rounded-[3px] text-white font-bold text-[14px] uppercase flex justify-center py-[5px] cursor-pointer">
                       Добавить
                     </button>
                     <button className="w-[120px] h-[32px] bg-black rounded-[3px] text-white font-bold text-[14px] uppercase flex justify-center py-[5px] cursor-pointer">
                       Удалить
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
