@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { rm } from "fs/promises";
+import path from "path";
 
 export async function GET(
   req: NextRequest,
@@ -86,5 +88,14 @@ export async function DELETE(
   }
 
   await prisma.project.delete({ where: { id: Number(id) } });
+
+  const userdataDir = path.join(
+    process.cwd(),
+    "userdata",
+    session.user.username!,
+    id,
+  );
+  await rm(userdataDir, { recursive: true, force: true });
+
   return NextResponse.json({ success: true });
 }
