@@ -136,7 +136,10 @@ export default function ProjectPage() {
       }
       const { exists, pdfName } = await checkRes.json();
       if (!exists) {
-        setLogs((prev) => [...prev, `[ERROR] PDF-файл не найден на сервере: ${pdfName}. Загрузите файл заново.`]);
+        setLogs((prev) => [
+          ...prev,
+          `[ERROR] PDF-файл не найден на сервере: ${pdfName}. Загрузите файл заново.`,
+        ]);
         setButtonDisabled(false);
         return;
       }
@@ -170,18 +173,40 @@ export default function ProjectPage() {
             const event = JSON.parse(line.slice(6));
             if (event.type === "stdout" || event.type === "stderr") {
               setLogs((prev) => [...prev, event.text.trim()]);
+            } else if (event.type === "done") {
+              if (!event.success) {
+                setLogs((prev) => [...prev, `[ERROR] Скрипт завершился с кодом ${event.exitCode}`]);
+              }
+              success = event.success;
+            } else if (event.type === "error") {
+              setLogs((prev) => [...prev, `[ERROR] ${event.text}`]);
+              success = false;
             }
           } catch {
             // skip malformed events
           }
         }
       }
-      success = true;
     } catch (err) {
       setLogs((prev) => [...prev, `[ERROR] ${err}`]);
     } finally {
       setButtonDisabled(false);
-      if (success) setExcelFileExist(true);
+      if (success) {
+        setExcelFileExist(true);
+        const saveRes = await fetch(`/api/projects/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            excelName: "Результат.xlsx"
+          }),
+        });
+        if (!saveRes.ok) {
+          setLogs((prev) => [...prev, "[ERROR] Failed to save settings"]);
+          return;
+        }
+        const saved = await saveRes.json();
+        setProject(saved);
+      }
     }
   };
 
@@ -238,10 +263,10 @@ export default function ProjectPage() {
               htmlFor="upload"
             >
               {file
-  ? file.name
-  : project.pdfName && project.pdfName !== "не загружен"
-    ? `${project.pdfName}`
-    : "Выбрать файл"}
+                ? file.name
+                : project.pdfName && project.pdfName !== "не загружен"
+                  ? `${project.pdfName}`
+                  : "Выбрать файл"}
             </label>
             <button
               className="w-full text-[14px] font-bold uppercase text-left flex gap-x-[8px] cursor-pointer"
