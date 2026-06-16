@@ -1,6 +1,5 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { redirect, useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -10,22 +9,37 @@ interface Project {
   pdfName: string;
   excelName: string;
   description: string;
+  floors: string | null;
+  rawHeaders: string | null;
+  breakWords: string | null;
+  maxIndex: string | null;
+  maxDistSnap: string | null;
+  maxDistStop: string | null;
+  minFont: string | null;
+  shouldWarn: string | null;
 }
 
 export default function ProjectPage() {
-  const { data: session } = authClient.useSession();
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
 
   const [logs, setLogs] = useState<string[]>([]);
   const logRef = useRef<HTMLDivElement>(null);
 
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [isExcelFileExist, setExcelFileExist] = useState(false);
+
+  const [floors, setFloors] = useState("");
+  const [rawHeaders, setRawHeaders] = useState("");
+  const [breakWords, setBreakWords] = useState("");
+  const [maxIndex, setMaxIndex] = useState("");
+  const [maxDistSnap, setMaxDistSnap] = useState("");
+  const [maxDistStop, setMaxDistStop] = useState("");
+  const [minFont, setMinFont] = useState("");
+  const [shouldWarn, setShouldWarn] = useState(false);
 
   useEffect(() => {
     if (logRef.current) {
@@ -41,6 +55,14 @@ export default function ProjectPage() {
       })
       .then((data) => {
         setProject(data);
+        setFloors(data.floors ?? "");
+        setRawHeaders(data.rawHeaders ?? "");
+        setBreakWords(data.breakWords ?? "");
+        setMaxIndex(data.maxIndex ?? "");
+        setMaxDistSnap(data.maxDistSnap ?? "");
+        setMaxDistStop(data.maxDistStop ?? "");
+        setMinFont(data.minFont ?? "");
+        setShouldWarn(data.shouldWarn === "true");
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -74,7 +96,7 @@ export default function ProjectPage() {
       }
 
       project.pdfName = file.name;
-      const excelName = file.name.substring(0, file.name.lastIndexOf('.'));
+      const excelName = file.name.substring(0, file.name.lastIndexOf("."));
       project.excelName = `${excelName}.xlsx`;
       setExcelFileExist(false);
       setButtonDisabled(false);
@@ -86,6 +108,27 @@ export default function ProjectPage() {
     setLogs([]);
     let success = false;
     try {
+      const saveRes = await fetch(`/api/projects/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          floors,
+          rawHeaders,
+          breakWords,
+          maxIndex,
+          maxDistSnap,
+          maxDistStop,
+          minFont,
+          shouldWarn: String(shouldWarn),
+        }),
+      });
+      if (!saveRes.ok) {
+        setLogs((prev) => [...prev, "[ERROR] Failed to save settings"]);
+        return;
+      }
+      const saved = await saveRes.json();
+      setProject(saved);
+
       const res = await fetch("/api/projects/run_script", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -204,6 +247,8 @@ export default function ProjectPage() {
                 <input
                   type="text"
                   placeholder="Например: 1, 2, 15 или “без”"
+                  value={floors}
+                  onChange={(e) => setFloors(e.target.value)}
                   className="w-full min-h-[30px] border-2 rounded-[3px] px-[8px] py-[5px]"
                 />
               </div>
@@ -214,8 +259,9 @@ export default function ProjectPage() {
                 </label>
                 <div className="flex gap-x-[10px]">
                   <textarea
-                    readOnly
                     rows={1}
+                    value={rawHeaders}
+                    onChange={(e) => setRawHeaders(e.target.value)}
                     placeholder="Например: Номер, число, площадь, м2"
                     className="w-full min-h-[90px] border-2 rounded-[3px] px-[8px] py-[5px]"
                   />
@@ -236,8 +282,9 @@ export default function ProjectPage() {
                 </label>
                 <div className="flex gap-x-[10px]">
                   <textarea
-                    readOnly
                     rows={4}
+                    value={breakWords}
+                    onChange={(e) => setBreakWords(e.target.value)}
                     placeholder={"Например:\nэкспликация\nусловные\nсхема"}
                     className="w-full min-h-[110px] border-2 rounded-[3px] px-[8px] py-[5px]"
                   />
@@ -259,6 +306,8 @@ export default function ProjectPage() {
                 <input
                   type="text"
                   placeholder="Например: 30"
+                  value={maxIndex}
+                  onChange={(e) => setMaxIndex(e.target.value)}
                   className="w-full min-h-[30px] border-2 rounded-[3px] px-[8px] py-[5px]"
                 />
               </div>
@@ -271,6 +320,8 @@ export default function ProjectPage() {
                 <input
                   type="text"
                   placeholder="Например: 3"
+                  value={maxDistSnap}
+                  onChange={(e) => setMaxDistSnap(e.target.value)}
                   className="w-full min-h-[30px] border-2 rounded-[3px] px-[8px] py-[5px]"
                 />
               </div>
@@ -283,6 +334,8 @@ export default function ProjectPage() {
                 <input
                   type="text"
                   placeholder="Например: 45"
+                  value={maxDistStop}
+                  onChange={(e) => setMaxDistStop(e.target.value)}
                   className="w-full min-h-[30px] border-2 rounded-[3px] px-[8px] py-[5px]"
                 />
               </div>
@@ -295,6 +348,8 @@ export default function ProjectPage() {
                 <input
                   type="text"
                   placeholder="Например: 10"
+                  value={minFont}
+                  onChange={(e) => setMinFont(e.target.value)}
                   className="w-full min-h-[30px] border-2 rounded-[3px] px-[8px] py-[5px]"
                 />
               </div>
@@ -306,14 +361,15 @@ export default function ProjectPage() {
                 </label>
                 <input
                   type="checkbox"
+                  checked={shouldWarn}
+                  onChange={(e) => setShouldWarn(e.target.checked)}
                   className="w-[40px] h-[40px] rounded-[3px] px-[8px] py-[5px] cursor-pointer"
                 />
               </div>
             </div>
             <button
               disabled={isButtonDisabled}
-              // onClick={isExcelFileExist ? handleDownload : handleParse}
-              // onClick={handleDownload}
+              onClick={isExcelFileExist ? handleDownload : handleParse}
               className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer disabled:bg-gray-400"
             >
               {isButtonDisabled

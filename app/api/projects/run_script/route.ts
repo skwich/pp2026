@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   if (project.maxDistSnap) args.push("--max-dist-snap", project.maxDistSnap);
   if (project.maxDistStop) args.push("--max-dist-stop", project.maxDistStop);
   if (project.minFont) args.push("--min-font", project.minFont);
-  if (project.shouldWarn) args.push("--should-warn", project.shouldWarn);
+  if (project.shouldWarn == "true") args.push("--should-warn");
 
   const encoder = new TextEncoder();
 
