@@ -321,4 +321,4 @@ def create_excel(data, output_path="result.xlsx"):
     ws_pick.freeze_panes(1, 0)
 
     workbook.close()
-    print(f"Excel-файл сохранён: {output_path}")
+    # print(f"Excel-файл сохранён: {output_path}")

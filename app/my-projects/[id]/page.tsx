@@ -21,11 +21,11 @@ export default function ProjectPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  const [floors, setFloors] = useState("");
   const [logs, setLogs] = useState<string[]>([]);
   const logRef = useRef<HTMLDivElement>(null);
 
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [isExcelFileExist, setExcelFileExist] = useState(false);
 
   useEffect(() => {
     if (logRef.current) {
@@ -54,17 +54,32 @@ export default function ProjectPage() {
     redirect("/my-projects");
   }
 
-  const handleChangeInputText = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  if (e.target.files && e.target.files[0]) {
-    const file = e.target.files[0];
-    setFile(file);
-    setButtonDisabled(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    await fetch(`/api/projects/${id}/upload`, { method: "POST", body: formData });
-    setButtonDisabled(false);
-  }
-};
+  const handleChangeInputText = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (e.target.files && e.target.files[0]) {
+      setButtonDisabled(true);
+      const file = e.target.files[0];
+      setFile(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch(`/api/projects/${id}/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        console.error(response.statusText);
+        return;
+      }
+
+      project.pdfName = file.name;
+      const excelName = file.name.substring(0, file.name.lastIndexOf('.'));
+      project.excelName = `${excelName}.xlsx`;
+      setExcelFileExist(false);
+      setButtonDisabled(false);
+    }
+  };
 
   const handleParse = async () => {
     setButtonDisabled(true);
@@ -104,10 +119,9 @@ export default function ProjectPage() {
       setLogs((prev) => [...prev, `[ERROR] ${err}`]);
     } finally {
       setButtonDisabled(false);
+      setExcelFileExist(true);
     }
   };
-
-  
 
   const handleDownload = async () => {
     setButtonDisabled(true);
@@ -115,7 +129,13 @@ export default function ProjectPage() {
       const response = await fetch(`/api/projects/${id}/download`, {
         method: "POST",
       });
-      // todo download
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = project.excelName || "Результат.xlsx";
+      a.click();
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error(err);
     } finally {
@@ -280,10 +300,14 @@ export default function ProjectPage() {
             </div>
             <button
               disabled={isButtonDisabled}
-              onClick={handleParse}
-              className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer"
+              onClick={isExcelFileExist ? handleDownload : handleParse}
+              className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer disabled:bg-gray-400"
             >
-              {"Запустить обработку"}
+              {isButtonDisabled
+                ? "Обрабатывается..."
+                : isExcelFileExist
+                  ? "Скачать результат"
+                  : "Запустить обработку"}
             </button>
           </div>
         </div>

@@ -15,6 +15,7 @@ class App:
     def run(self):
         print("Запуск обработки...", flush=True)
         self.process()
+        print("Обработка закончена", flush=True)
 
 
     def process(self):
@@ -42,7 +43,6 @@ class App:
             print("Создание Excel...", flush=True)
             create_excel(data, output_path=output_path)
             print("Готово", flush=True)
-            print(f"Готово: Excel файл создан по адресу: {self.output_path}", flush=True)
 
 
         except Exception as e:
