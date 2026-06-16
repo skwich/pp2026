@@ -415,7 +415,7 @@ export default function ProjectPage() {
             <button
               disabled={isButtonDisabled}
               onClick={isExcelFileExist ? handleDownload : handleParse}
-              className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer disabled:bg-gray-400"
+              className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer disabled:cursor-default disabled:bg-gray-400"
             >
               {isButtonDisabled
                 ? "Обрабатывается..."
