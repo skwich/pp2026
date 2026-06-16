@@ -43,6 +43,7 @@ export async function PATCH(
 
   const body = await req.json();
   const data: Record<string, unknown> = {};
+  if (body.title !== undefined) data.title = body.title;
   if (body.floors !== undefined) data.floors = body.floors;
   if (body.rawHeaders !== undefined) data.rawHeaders = body.rawHeaders;
   if (body.breakWords !== undefined) data.breakWords = body.breakWords;

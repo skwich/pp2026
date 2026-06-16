@@ -40,6 +40,8 @@ export default function ProjectPage() {
   const [maxDistStop, setMaxDistStop] = useState("");
   const [minFont, setMinFont] = useState("");
   const [shouldWarn, setShouldWarn] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
 
   useEffect(() => {
     if (logRef.current) {
@@ -239,10 +241,46 @@ export default function ProjectPage() {
     }
   };
 
+  async function handleSaveTitle() {
+    if (!editTitle.trim()) return;
+    const res = await fetch(`/api/projects/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: editTitle.trim() }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setProject(updated);
+    }
+    setIsEditingTitle(false);
+  }
+
   return (
     <div className="bg-white mx-auto">
       <div className="max-w-[1100px] mx-auto mt-[50px] flex justify-between items-center">
-        <h1 className="text-[36px] font-bold uppercase">{project.title}</h1>
+        {isEditingTitle ? (
+          <input
+            autoFocus
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            onBlur={handleSaveTitle}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSaveTitle();
+              if (e.key === "Escape") setIsEditingTitle(false);
+            }}
+            className="text-[36px] font-bold uppercase border-b-2 outline-none"
+          />
+        ) : (
+          <h1
+            className="text-[36px] font-bold uppercase cursor-pointer hover:opacity-70"
+            onClick={() => {
+              setEditTitle(project.title);
+              setIsEditingTitle(true);
+            }}
+          >
+            {project.title}
+          </h1>
+        )}
         <a
           href="/my-projects"
           className="text-[20px] font-normal uppercase bg-[url('/angle_bracket_left.svg')] bg-left bg-no-repeat pl-4 hover:cursor-pointer"

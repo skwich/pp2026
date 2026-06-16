@@ -98,6 +98,11 @@ export default function MyProjectsPage() {
               description={project.description}
               onOpenProject={handleOpenProject}
               onDeleteProject={handleDeleteProject}
+              onTitleChange={(id, newTitle) =>
+                setProject((prev) =>
+                  prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p)),
+                )
+              }
             />
           ))}
           {searchQuery.trim() === "" && (
