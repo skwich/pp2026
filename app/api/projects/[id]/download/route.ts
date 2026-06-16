@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { spawn } from "child_process";
 import { readFile } from "fs/promises";
 import path from "path";
 
@@ -23,21 +22,28 @@ export async function POST(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
   
-  const filename = project.excelName || "Результат.xlsx";
   const filepath = path.join(
     process.cwd(),
     "userdata",
     session.user.username,
     id,
-    filename,
+    "Результат.xlsx",
   );
 
-  const buffer = await readFile(filepath);
-  return new Response(buffer, {
-    headers: {
-      "Content-Type":
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": `attachment; filename="${filename}"`,
-    },
-  });
+  try {
+    const buffer = await readFile(filepath);
+    return new Response(buffer, {
+      headers: {
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent("Результат.xlsx")}`,
+      },
+    });
+  } catch (err) {
+    console.error(`[download] filepath: ${filepath}`, err);
+    return NextResponse.json(
+      { error: "Excel-файл ещё не сформирован" },
+      { status: 404 },
+    );
+  }
 }

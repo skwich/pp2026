@@ -84,12 +84,18 @@ export default function ProjectPage() {
   const handleParse = async () => {
     setButtonDisabled(true);
     setLogs([]);
+    let success = false;
     try {
       const res = await fetch("/api/projects/run_script", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ project_id: id }),
       });
+
+      if (!res.ok) {
+        setLogs((prev) => [...prev, `[ERROR] Server returned ${res.status}`]);
+        return;
+      }
 
       const reader = res.body!.getReader();
       const decoder = new TextDecoder();
@@ -115,11 +121,12 @@ export default function ProjectPage() {
           }
         }
       }
+      success = true;
     } catch (err) {
       setLogs((prev) => [...prev, `[ERROR] ${err}`]);
     } finally {
       setButtonDisabled(false);
-      setExcelFileExist(true);
+      if (success) setExcelFileExist(true);
     }
   };
 
@@ -129,11 +136,16 @@ export default function ProjectPage() {
       const response = await fetch(`/api/projects/${id}/download`, {
         method: "POST",
       });
+      if (!response.ok) {
+        const err = await response.json();
+        alert(err.error || "Ошибка при скачивании");
+        return;
+      }
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = project.excelName || "Результат.xlsx";
+      a.download = "Результат.xlsx";
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
@@ -300,7 +312,8 @@ export default function ProjectPage() {
             </div>
             <button
               disabled={isButtonDisabled}
-              onClick={isExcelFileExist ? handleDownload : handleParse}
+              // onClick={isExcelFileExist ? handleDownload : handleParse}
+              // onClick={handleDownload}
               className="w-[250px] h-[50px] mx-auto mt-[20px] mb-[10px] bg-black text-white text-[14px] font-bold uppercase rounded-[3px] cursor-pointer disabled:bg-gray-400"
             >
               {isButtonDisabled
