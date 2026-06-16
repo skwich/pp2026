@@ -86,6 +86,14 @@ export default function MyProjectsPage() {
           </div>
         </div>
         <div className="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[55px]  gap-y-[30px]">
+          {searchQuery.trim() === "" && (
+            <button
+              onClick={() => handleAddProject()}
+              className="w-[330px] h-[163px] border-[2px] rounded-[5px] text-[20px] font-bold uppercase"
+            >
+              + Новый проект
+            </button>
+          )}
           {sortedProjects.map((project) => (
             <ProjectCard
               key={project.id}
@@ -105,14 +113,6 @@ export default function MyProjectsPage() {
               }
             />
           ))}
-          {searchQuery.trim() === "" && (
-            <button
-              onClick={() => handleAddProject()}
-              className="w-[330px] h-[163px] border-[2px] rounded-[5px] text-[20px] font-bold uppercase"
-            >
-              + Новый проект
-            </button>
-          )}
         </div>
       </div>
     </div>
