@@ -129,6 +129,18 @@ export default function ProjectPage() {
       const saved = await saveRes.json();
       setProject(saved);
 
+      const checkRes = await fetch(`/api/projects/${id}/check-pdf`);
+      if (!checkRes.ok) {
+        setLogs((prev) => [...prev, "[ERROR] Failed to check PDF file"]);
+        return;
+      }
+      const { exists, pdfName } = await checkRes.json();
+      if (!exists) {
+        setLogs((prev) => [...prev, `[ERROR] PDF-файл не найден на сервере: ${pdfName}. Загрузите файл заново.`]);
+        setButtonDisabled(false);
+        return;
+      }
+
       const res = await fetch("/api/projects/run_script", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -225,7 +237,11 @@ export default function ProjectPage() {
               className="w-full py-[25px] border-2 rounded-[3px] border-dashed text-center"
               htmlFor="upload"
             >
-              {file ? file.name : "Выбрать файл"}
+              {file
+  ? file.name
+  : project.pdfName && project.pdfName !== "не загружен"
+    ? `${project.pdfName}`
+    : "Выбрать файл"}
             </label>
             <button
               className="w-full text-[14px] font-bold uppercase text-left flex gap-x-[8px] cursor-pointer"
