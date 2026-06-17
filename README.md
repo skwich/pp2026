@@ -1,45 +1,44 @@
 ## Скриншоты
+<img src=".github/images/project.png" width="700">
+
 <img src=".github/images/myprojects.png" width="700">
 
 <img src=".github/images/register.png" width="700">
 
 <img src=".github/images/login.png" width="700">
 
-## Overview
+# INPAD — Воздухообмен
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Веб-приложение для инженеров-проектировщиков вентиляции (ОВиК), автоматизирующее создание расчётных таблиц воздухообмена из PDF-чертежей.
 
-## Getting Started
+## Возможности
 
-First, run the development server:
+- **Загрузка PDF** — загружайте поэтажные планы с экспликациями помещений
+- **Гибкая настройка** — конфигурация параметров извлечения таблиц под каждый проект (этажи, заголовки столбцов, чувствительность распознавания)
+- **Автоматическое извлечение** — Python-скрипт находит таблицы экспликаций на чертежах и извлекает данные по каждому помещению
+- **Генерация Excel** — готовый файл с тремя листами:
+  - **Поэтажные таблицы** — номера, наименования, площади, объёмы, расчётные расходы притока и вытяжки
+  - **Системы** — сводка по системам вентиляции с 10% запасом и расчётом мощности калорифера
+  - **Подборы** — шаблон для подбора оборудования с выпадающими списками
+- **Управление проектами** — создавайте, переименовывайте, ищите и удаляйте проекты
+- **Аутентификация** — регистрация и вход по email или username
+
+## Технологии
+
+**Frontend:** Next.js 16, React 19, Tailwind CSS 4  
+**Backend:** Next.js API Routes  
+**База данных:** SQLite (Prisma ORM)  
+**Аутентификация:** better-auth  
+**Обработка PDF:** Python (pdfplumber, pdfminer)  
+**Генерация Excel:** Python (xlsxwriter)
+
+## Начало работы
+
+Установите зависимости и запустите сервер разработки:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
