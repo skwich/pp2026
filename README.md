@@ -1,4 +1,4 @@
-## Screenshots
+## Скриншоты
 <img src=".github/images/myprojects.png" width="700">
 
 <img src=".github/images/register.png" width="700">
