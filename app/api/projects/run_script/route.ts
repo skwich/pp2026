@@ -38,25 +38,26 @@ export async function POST(req: NextRequest) {
 
   const encoder = new TextEncoder();
 
-  function safeEnqueue(controller: ReadableStreamDefaultController, data: string) {
+  function safeEnqueue(
+    controller: ReadableStreamDefaultController,
+    data: string,
+  ) {
     try {
       controller.enqueue(encoder.encode(data));
-    } catch {
-      // stream already closed
-    }
+    } catch {}
   }
 
   function safeClose(controller: ReadableStreamDefaultController) {
     try {
       controller.close();
-    } catch {
-      // stream already closed
-    }
+    } catch {}
   }
 
   const stream = new ReadableStream({
     start(controller) {
-      const proc = spawn("script/.venv/bin/python", args, { cwd: process.cwd() });
+      const proc = spawn("script/.venv/bin/python", args, {
+        cwd: process.cwd(),
+      });
 
       req.signal.addEventListener("abort", () => {
         proc.kill();
@@ -65,12 +66,18 @@ export async function POST(req: NextRequest) {
 
       proc.stdout.on("data", (d) => {
         const text = d.toString();
-        safeEnqueue(controller, `data: ${JSON.stringify({ type: "stdout", text })}\n\n`);
+        safeEnqueue(
+          controller,
+          `data: ${JSON.stringify({ type: "stdout", text })}\n\n`,
+        );
       });
 
       proc.stderr.on("data", (d) => {
         const text = d.toString();
-        safeEnqueue(controller, `data: ${JSON.stringify({ type: "stderr", text })}\n\n`);
+        safeEnqueue(
+          controller,
+          `data: ${JSON.stringify({ type: "stderr", text })}\n\n`,
+        );
       });
 
       proc.on("close", (exitCode) => {
@@ -95,7 +102,7 @@ export async function POST(req: NextRequest) {
     headers: {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
-      "Connection": "keep-alive",
+      Connection: "keep-alive",
     },
   });
 }

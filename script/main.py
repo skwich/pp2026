@@ -8,14 +8,11 @@ from pathlib import Path
 def apply_args():
     parser = argparse.ArgumentParser(description="Описание вашей программы")
 
-    # 1. Обязательные позиционные аргументы (передаются строго по порядку)
     parser.add_argument("floors", help="Количество этажей")
     parser.add_argument("username", help="Имя пользователя")
     parser.add_argument("project_id", help="ID проекта")
     parser.add_argument("pdf_name", help="Название PDF")
 
-    # 2. Именованные необязательные аргументы (передаются в любом порядке через --)
-    # Указываем правильные типы (int, float), так как из терминала всё идет строками (str)
     parser.add_argument(
         "--raw-headers", default=consts.raw_headers, help="Сырые заголовки"
     )
@@ -47,9 +44,6 @@ def apply_args():
         help="Мин. размер шрифта",
     )
 
-    # 3. Флаг (True/False). Передача `--should-warn` сделает его True. По умолчанию — False.
-    # Если в consts значение динамическое, используем action='store_true' / 'store_false'
-    # ВНИМАНИЕ: type=bool в argparse работает некорректно (любая строка, даже "False", станет True)
     parser.add_argument(
         "--should-warn",
         action="store_true",
@@ -57,19 +51,24 @@ def apply_args():
         help="Включить предупреждения",
     )
 
-    # Автоматически парсим аргументы
     args = parser.parse_args()
 
-    # Присваиваем значения глобальным константам (заменяем дефисы на нижние подчеркивания)
-    consts.raw_headers = [line.split() for line in args.raw_headers.splitlines()]
-    consts.break_words = args.break_words.split()
+    try:
+        consts.raw_headers = [line.split() for line in args.raw_headers.splitlines()]
+    except Exception:
+        consts.raw_headers = args.raw_headers
+
+    try:
+        consts.break_words = args.break_words.split()
+    except Exception:
+        consts.break_words = args.break_words
+        
     consts.max_index_to_search_header_words_by = args.max_index
     consts.max_distance_to_snap_words_together = args.max_dist_snap
     consts.max_distance_to_stop_forming_table = args.max_dist_stop
     consts.min_explication_font_size = args.min_font
     consts.should_warn = args.should_warn
 
-    # Возвращаем кортеж из обязательных параметров
     return args.floors, args.username, args.project_id, args.pdf_name
 
 
